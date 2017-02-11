@@ -39,21 +39,17 @@ public class TempWatcher {
 					
 					HttpResponse<InputStream> response = Unirest.get(baseURL).queryString("hkey", "0008911")
 							.queryString("hh_dong", "101").queryString("hh_ho", "705").queryString("no", "1").asBinary();
-					Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(response.getBody());
 					
-					XPath xpath = XPathFactory.newInstance().newXPath();
-			         
-					NodeList cols = (NodeList) xpath.evaluate("//boilerinfo//curtemp", doc, XPathConstants.NODESET);
-					
-					for(int i=0;i<cols.getLength();i++)
-					{
-							String temp = cols.item(i).getTextContent();
-							System.out.println(temp);
-							
-							logger.info("Temp : " + temp);
-						//
-					}
-					
+//					
+//					for(int i=0;i<cols.getLength();i++)
+//					{
+//							String temp = cols.item(i).getTextContent();
+//							System.out.println(temp);
+//							
+//							logger.info("Temp : " + temp);
+//						//
+//					}
+//					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
