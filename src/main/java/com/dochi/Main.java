@@ -32,7 +32,8 @@ public class Main {
 			boilerRunner.setTempWithoutMin(prop.getMinTemp());
 			
 			TempController tmp = new TempController(prop.getResponseURL());
-			tmp.watchTemparature(prop.getWannaTemp(), 10*1000*60);
+			int watchingMin = Integer.parseInt(prop.getWatchingMin());
+			tmp.watchTemparature(prop.getWannaTemp(), watchingMin*1000*60);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

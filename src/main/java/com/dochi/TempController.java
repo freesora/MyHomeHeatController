@@ -28,10 +28,10 @@ public class TempController extends TimerTask {
 	private String mResponseURL;
 	// private String mRequestURL;
 	// private XPath xpath;
-	private String m_hh_dong;
-	private String m_hkey;
-	private String m_hh_ho;
-	private String m_wannaTemp;
+//	private String m_hh_dong;
+//	private String m_hkey;
+//	private String m_hh_ho;
+//	private String m_wannaTemp;
 
 	private BoilerRunner boilerRunner;
 
@@ -68,6 +68,8 @@ public class TempController extends TimerTask {
 		if (BoilerRunner.isRunning != true) {
 			try {
 				// Number 1 : wanna focus
+				MyLogger.logger.info("Watching Temperature");
+
 				HttpResponse<InputStream> response = Unirest.get(prop.getResponseURL())
 						.queryString("hkey", prop.getHkey()).queryString("hh_dong", prop.getHh_dong())
 						.queryString("hh_ho", prop.getHh_ho()).queryString("no", "1").asBinary();
@@ -98,6 +100,7 @@ public class TempController extends TimerTask {
 				double convertedCurTemp = Double.parseDouble(curTemp);
 				double convertedWannaTemp = Double.parseDouble(prop.getWannaTemp());
 				if (convertedCurTemp < convertedWannaTemp && BoilerRunner.isRunning == false) {
+					MyLogger.logger.info("Running Boiler : " + prop.getHighTemp());
 					boilerRunner.runBoiler(prop.getHighTemp());
 				}
 			} catch (Exception e) {

@@ -79,6 +79,7 @@ public class PropertyReader {
 	private String wannaTemp;
 	private String runningMin;
 	private String minTemp;
+	private String watchingMin;
 	
 //	responseURL=http://m.ezville.net/ezvillehn/mobile/service/temSetSearchCall.php
 //		requestURL=http://m.ezville.net/ezvillehn/mobile/service/temSetControlCall.php
@@ -89,6 +90,14 @@ public class PropertyReader {
 //		runningMin=30
 //		minTemp=11.0
 	
+	public String getWatchingMin() {
+		return watchingMin;
+	}
+
+	public void setWatchingMin(String watchingMin) {
+		this.watchingMin = watchingMin;
+	}
+
 	public PropertyReader()
 	{
 		InputStream input;
@@ -105,6 +114,7 @@ public class PropertyReader {
 			runningMin = prop.getProperty("runningMin");
 			minTemp = prop.getProperty("minTemp");
 			highTemp = prop.getProperty("highTemp");
+			watchingMin = prop.getProperty("watchingMin");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			MyLogger.logger.error("Reading Property Error");
