@@ -6,6 +6,8 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.HttpRequest;
@@ -13,6 +15,7 @@ import com.mashape.unirest.request.HttpRequestWithBody;
 
 public class BoilerRunner {
 	public static boolean isRunning;
+	final static Logger logger = Logger.getLogger(BoilerRunner.class);
 
 	public int mPeriodTime;
 	// private String m_hh_dong;
@@ -29,7 +32,7 @@ public class BoilerRunner {
 	public void setTempWithoutMin(String temp) {
 
 		PropertyReader prop = new PropertyReader();
-		MyLogger.logger.info("Called settempWithoutMin Method -> Hoping Temp : " + temp);
+		logger.info("Called settempWithoutMin Method -> Hoping Temp : " + temp);
 		try {
 			HttpRequestWithBody httpRequest = Unirest.post(prop.getRequestURL());
 			for (int i = 1; i < 7; i++) {
@@ -41,36 +44,36 @@ public class BoilerRunner {
 							.queryString("hh_dong", prop.getHh_dong()).queryString("hh_ho", prop.getHh_ho())
 							.queryString("no", Integer.toString(i)).queryString("onoff", "Y")
 							.queryString("settemp", temp).asBinary();
-					MyLogger.logger.info("Request Result : " + tempRequest.getStatusText());
+					logger.info("Request Result : " + tempRequest.getStatusText());
 				} catch (Exception ie)// = tempRequest.queryString("no",
 										// "1").asBinary();
 				{
 					int retryCount = 5;
 					for (int j = 0; j < retryCount; j++) {
-						MyLogger.logger.error("Retry try : " + (j + 1));
+						logger.error("Retry try : " + (j + 1));
 						tempRequest = httpRequest.queryString("hkey", prop.getHkey())
 								.queryString("hh_dong", prop.getHh_dong()).queryString("hh_ho", prop.getHh_ho())
 								.queryString("no", Integer.toString(i)).queryString("onoff", "Y")
 								.queryString("settemp", temp).asBinary();
 						if (tempRequest.getStatusText().equals("OK")) {
-							MyLogger.logger.info("Retry has been successed ");
+							logger.info("Retry has been successed ");
 							break;
 						} else
-							MyLogger.logger.error(tempRequest.getStatusText());
+							logger.error(tempRequest.getStatusText());
 					}
 				}
 			}
 		} catch (Exception e) {
-			MyLogger.logger.error("Requesting URL has Error");
-			MyLogger.logger.error(e.getMessage());
+			logger.error("Requesting URL has Error");
+			logger.error(e.getMessage());
 		}
 	}
 
 	public void runBoiler(String temp) {
 		// String maxTemp = "30.0";
-		MyLogger.logger.info("Called runBoiler Method -> Hoping Temp : " + temp);
+		logger.info("Called runBoiler Method -> Hoping Temp : " + temp);
 
-		MyLogger.logger.info("Called settempWithoutMin Method -> Hoping Temp : " + temp);
+		logger.info("Called settempWithoutMin Method -> Hoping Temp : " + temp);
 		try {
 			PropertyReader prop = new PropertyReader();
 			HttpRequestWithBody httpRequest = Unirest.post(prop.getRequestURL());
@@ -83,22 +86,22 @@ public class BoilerRunner {
 							.queryString("hh_dong", prop.getHh_dong()).queryString("hh_ho", prop.getHh_ho())
 							.queryString("no", Integer.toString(i)).queryString("onoff", "Y")
 							.queryString("settemp", temp).asBinary();
-					MyLogger.logger.info("Request Result : " + tempRequest.getStatusText());
+					logger.info("Request Result : " + tempRequest.getStatusText());
 				} catch (Exception ie)// = tempRequest.queryString("no",
 										// "1").asBinary();
 				{
 					int retryCount = 5;
 					for (int j = 0; j < retryCount; j++) {
-						MyLogger.logger.error("Retry try : " + (j + 1));
+						logger.error("Retry try : " + (j + 1));
 						tempRequest = httpRequest.queryString("hkey", prop.getHkey())
 								.queryString("hh_dong", prop.getHh_dong()).queryString("hh_ho", prop.getHh_ho())
 								.queryString("no", Integer.toString(i)).queryString("onoff", "Y")
 								.queryString("settemp", temp).asBinary();
 						if (tempRequest.getStatusText().equals("OK")) {
-							MyLogger.logger.info("Retry has been successed ");
+							logger.info("Retry has been successed ");
 							break;
 						} else
-							MyLogger.logger.error(tempRequest.getStatusText());
+							logger.error(tempRequest.getStatusText());
 					}
 				}
 				// 0 -> maybe bathroom?
@@ -111,12 +114,12 @@ public class BoilerRunner {
 			isRunning = true;
 			Timer timer = new Timer();
 			int runningMinTmp = Integer.parseInt(prop.getRunningMin());
-			timer.schedule(new BoilerStopTask(), Math.round(runningMinTmp * 1000 * 60));
+			timer.schedule(new BoilerStopTask(), Math.round(runningMinTmp * 1000 * 60 * 1.5));
 		}
 
 		catch (Exception e) {
-			MyLogger.logger.error("Requesting URL has Error");
-			MyLogger.logger.error(e.getMessage());
+			logger.error("Requesting URL has Error");
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -126,7 +129,7 @@ public class BoilerRunner {
 			// TODO Auto-generated method stub
 			PropertyReader prop = new PropertyReader();
 
-			MyLogger.logger.info("in " + Math.round(Integer.parseInt(prop.getRunningMin()) * 1.5) + "minutes");
+			logger.info("in " + Math.round(Integer.parseInt(prop.getRunningMin()) * 1.5) + "minutes");
 			setTempWithoutMin(prop.getMinTemp());
 			isRunning = false;
 			this.cancel();

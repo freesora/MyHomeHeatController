@@ -13,6 +13,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -24,6 +25,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 
 public class TempController extends TimerTask {
+	final static Logger logger = Logger.getLogger(TempController.class);
 
 	private String mResponseURL;
 	// private String mRequestURL;
@@ -42,8 +44,8 @@ public class TempController extends TimerTask {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			MyLogger.logger.error("Reading Property File Error");
-			MyLogger.logger.error(e.getMessage());
+			logger.error("Reading Property File Error");
+			logger.error(e.getMessage());
 			// e.printStackTrace();
 		}
 
@@ -68,7 +70,7 @@ public class TempController extends TimerTask {
 		if (BoilerRunner.isRunning != true) {
 			try {
 				// Number 1 : wanna focus
-				MyLogger.logger.info("Watching Temperature");
+				logger.info("Watching Temperature");
 
 				HttpResponse<InputStream> response = Unirest.get(prop.getResponseURL())
 						.queryString("hkey", prop.getHkey()).queryString("hh_dong", prop.getHh_dong())
@@ -88,10 +90,10 @@ public class TempController extends TimerTask {
 							Node tmpNode = childNodes.item(j);
 							if (tmpNode.getNodeName().equals("curtemp")) {
 								curTemp = tmpNode.getFirstChild().getNodeValue();
-								MyLogger.logger.info("Current Temp : " + curTemp);
+								logger.info("Current Temp : " + curTemp);
 							} else if (tmpNode.getNodeName().equals("settemp")) {
 								setTemp = tmpNode.getFirstChild().getNodeValue();
-								MyLogger.logger.info("Setting Temp : " + setTemp);
+								logger.info("Setting Temp : " + setTemp);
 							}
 						}
 
@@ -100,12 +102,12 @@ public class TempController extends TimerTask {
 				double convertedCurTemp = Double.parseDouble(curTemp);
 				double convertedWannaTemp = Double.parseDouble(prop.getWannaTemp());
 				if (convertedCurTemp < convertedWannaTemp && BoilerRunner.isRunning == false) {
-					MyLogger.logger.info("Running Boiler : " + prop.getHighTemp());
+					logger.info("Running Boiler : " + prop.getHighTemp());
 					boilerRunner.runBoiler(prop.getHighTemp());
 				}
 			} catch (Exception e) {
-				MyLogger.logger.error("Error!");
-				MyLogger.logger.error(e.getMessage());
+				logger.error("Error!");
+				logger.error(e.getMessage());
 			}
 		}
 
