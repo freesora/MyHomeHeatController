@@ -34,6 +34,7 @@ public class Main {
 			TempController tmp = new TempController(prop.getResponseURL());
 			int watchingMin = Integer.parseInt(prop.getWatchingMin());
 			tmp.watchTemparature(prop.getWannaTemp(), watchingMin*1000*60);
+			//
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

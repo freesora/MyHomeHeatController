@@ -77,7 +77,7 @@ public class BoilerRunner {
 		try {
 			PropertyReader prop = new PropertyReader();
 			HttpRequestWithBody httpRequest = Unirest.post(prop.getRequestURL());
-			for (int i = 1; i < 7; i++) {
+			for (int i = 6; i > 0; i--) {
 				if (i == 5)
 					continue;
 				HttpResponse<InputStream> tempRequest = null;
@@ -114,13 +114,26 @@ public class BoilerRunner {
 			isRunning = true;
 			Timer timer = new Timer();
 			int runningMinTmp = Integer.parseInt(prop.getRunningMin());
-			timer.schedule(new BoilerStopTask(), Math.round(runningMinTmp * 1000 * 60 * 1.5));
+			timer.schedule(new BoilerStopTask(), Math.round(runningMinTmp * 1000 * 60));
+			timer.schedule(new BoilerFlagChangeTask(), Math.round(runningMinTmp * 1000 * 60) * 2);
 		}
 
 		catch (Exception e) {
 			logger.error("Requesting URL has Error");
 			logger.error(e.getMessage());
 		}
+	}
+	
+	class BoilerFlagChangeTask extends TimerTask{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			isRunning = false;
+			logger.info("Running flag has been changed");
+			this.cancel();
+		}
+		
 	}
 
 	class BoilerStopTask extends TimerTask {
@@ -129,9 +142,9 @@ public class BoilerRunner {
 			// TODO Auto-generated method stub
 			PropertyReader prop = new PropertyReader();
 
-			logger.info("in " + Math.round(Integer.parseInt(prop.getRunningMin()) * 1.5) + "minutes");
+			logger.info("in " + Integer.parseInt(prop.getRunningMin()) + "minutes");
+			logger.info("Temporature will be changed");
 			setTempWithoutMin(prop.getMinTemp());
-			isRunning = false;
 			this.cancel();
 		}
 		
