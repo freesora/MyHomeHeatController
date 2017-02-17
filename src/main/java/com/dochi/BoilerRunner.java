@@ -77,7 +77,7 @@ public class BoilerRunner {
 		try {
 			PropertyReader prop = new PropertyReader();
 			HttpRequestWithBody httpRequest = Unirest.post(prop.getRequestURL());
-			for (int i = 6; i > 0; i--) {
+			for (int i = 1; i < 7; i++) {
 				if (i == 5)
 					continue;
 				HttpResponse<InputStream> tempRequest = null;
