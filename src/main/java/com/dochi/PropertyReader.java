@@ -122,6 +122,31 @@ public class PropertyReader {
 			//e.printStackTrace();
 		}
 	}
+	
+	public PropertyReader(String path)
+	{
+		InputStream input;
+		try {
+			Properties prop = new Properties();
+			input = new FileInputStream(path);
+			prop.load(input);
+			requestURL = prop.getProperty("requestURL");
+			responseURL = prop.getProperty("responseURL");
+			hh_dong = prop.getProperty("hh_dong");
+			hkey = prop.getProperty("hkey");
+			hh_ho = prop.getProperty("hh_ho");
+			wannaTemp = prop.getProperty("wannaTemp");
+			runningMin = prop.getProperty("runningMin");
+			minTemp = prop.getProperty("minTemp");
+			highTemp = prop.getProperty("highTemp");
+			watchingMin = prop.getProperty("watchingMin");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			MyLogger.logger.error("Reading Property Error");
+			MyLogger.logger.error(e.getMessage());
+			//e.printStackTrace();
+		}
+	}
 
 	public String getHighTemp() {
 		return highTemp;
